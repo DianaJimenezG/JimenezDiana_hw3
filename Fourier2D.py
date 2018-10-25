@@ -1,31 +1,20 @@
 import numpy as np
-import imageio
-from scipy import ndimage
-from scipy import fftpack
 import matplotlib.pyplot as plt
+from scipy import fftpack
 from matplotlib.colors import LogNorm
 
-img = ndimage.imread('tree.png')
+img = plt.imread('arbol.png').astype(float)
 
-print img.shape
-print type(img)
-
-########################################
-#f = np.fft.fft2(img)
-#fshift = np.fft.fftshift(f)
-#magnitude_spectrum = 20*np.log(np.abs(fshift))
-
-#plt.subplot(121),plt.imshow(img, cmap = 'gray')
-#plt.title('Input Image'), plt.xticks([]), plt.yticks([])
-#plt.subplot(122),plt.imshow(f, cmap = 'gray')
-#plt.title('Transformada'), plt.xticks([]), plt.yticks([])
-#plt.show()
-#######################################
-
+plt.figure(1)
+plt.imshow(img, plt.cm.gray)
+plt.title('Imagen original')
+plt.show()
 
 im_fft = fftpack.fft2(img)
+im_fft_2 = fftpack.fftshift(im_fft)
 
-plt.figure()
-plt.imshow(np.abs(im_fft), norm=LogNorm(vmin=5))
+plt.figure(2)
+plt.imshow(np.abs(np.real(im_fft_2)), norm=LogNorm(vmin=5))
 plt.colorbar()
-plt.title('Fourier transform')
+plt.title('Transformada de Fourier')
+plt.show()
