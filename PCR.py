@@ -1,47 +1,36 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-datos=np.genfromtxt("WDBC.dat", delimiter=",", dtype = "str")
+########## Datos ##########
+#Matriz de variables
+datos=np.genfromtxt("WDBC.dat", delimiter=",")
 V=datos[:,2:]
 
+#Columna de diagnostico. Se usa la convencion 'M'=1 y 'B'=0.
 diagn=np.genfromtxt("WDBC.dat", delimiter = "," , usecols = 1, dtype = "str")
 D=np.ones(diagn.shape)
 for i in range(diagn.shape[0]):
     if diagn[i]=='B':
         D[i]=0
 
-#g=plt.figure(1)
-#plt.plot(T1)
-#plt.plot(T2)
-#plt.plot(T3)
-#plt.plot(T4)
-#plt.legend(['T1:fl','T2:fr','T3:bl','T4:br'], loc='upper left')
-#plt.ylabel('Temperatura')
-#g.savefig("JimenezDianaS6C2PLOTTemp.pdf")
 
+######### Funciones ##########
+#Funcion que normalizacion la matriz de variables.
+#Para cada columna, resta el promedio y divide por la varianza.
+def V_norm(M):
+    for j in range(M.shape[1]):
+        v=M[:,j]
+        prom=np.average(v)
+        var=np.var(v)
+        M[:,j]=(v-prom)/np.sqrt(var)
+    return M
 
-#T1_prom=np.average(T1)
-#T2_prom=np.average(T2)
-#T3_prom=np.average(T3)
-#T4_prom=np.average(T4)
+Vn=V_norm(np.copy(V))
+print np.average(V[:,0])
+print np.average(Vn[:,0])
+print np.var(V[:,0])
+print np.var(Vn[:,0])
 
-
-#def x_xprom(x,xprom):
-#   d=np.empty(0)
-#   for i in range(x.size):
-#      d=np.append(d, x[i]-xprom)
-#   return d
-
-#dT1=x_xprom(T1,T1_prom)
-#dT2=x_xprom(T2,T2_prom)
-#dT3=x_xprom(T3,T3_prom)
-#dT4=x_xprom(T4,T4_prom)
-
-#def sigma_ij(dTa,dTb):
-#   x=np.empty(0)
-#   for k in range(dTa.size-1):
-#      x=np.append(x,(dTa[k]*dTb[k])/(dTa.size-1))
-#   return np.sum(x)
 
 #def m_cov(dT1,dT2,dT3,dT4):
 #   var=np.array(([dT1],[dT2],[dT3],[dT4]))
