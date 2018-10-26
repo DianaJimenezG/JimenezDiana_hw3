@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 ########## Datos ##########
 #Matriz de variables
 datos=np.genfromtxt("WDBC.dat", delimiter=",")
@@ -13,6 +14,9 @@ for i in range(diagn.shape[0]):
     if diagn[i]=='B':
         D[i]=0
 
+nombre_v=['mean radius','radius SE','worst radius', 'mean texture','texture SE','worst texture', 'mean perimeter','perimeter SE','worst perimeter', 'mean area','area SE','worst area', 'mean smoothness','smoothness SE','worst smoothness', 'mean compactness','compactness SE','worst compactness', 'mean concavity','concavity SE','worst concavity', 'mean concave points','concave points SE','worst concave points', 'mean symmetry','symmetry SE','worst symmetry', 'mean fractal dimension','fractal dimension SE','worst fractal dimension']
+
+
 ######### Funciones ##########
 #Funcion que normalizacion la matriz de variables.
 #Para cada columna, resta el promedio y divide por la varianza.
@@ -24,8 +28,7 @@ def V_norm(M):
         M[:,j]=(v-p)/np.sqrt(var)
     return M
 
-Vn=V_norm(np.copy(V))
-
+#Funcion que calcula la covarianza entre dos variables.
 def cov_ij(V1,V2):
     x=np.empty(0)
     mV1=np.mean(V1)
@@ -34,6 +37,7 @@ def cov_ij(V1,V2):
         x=np.append(x,((V1[k]-mV1)*(V2[k]-mV2))/(V1.shape[0]-1))
     return np.sum(x)
 
+#Funcion que construye la matriz de covarianza.
 def m_cov(Mn):
     n=Mn.shape[1]
     C=np.zeros(shape=(n,n))
@@ -42,6 +46,27 @@ def m_cov(Mn):
             C[i,j]=cov_ij(Mn[:,i],Mn[:,j])
     return C
 
+######### Calculos ##########
+Vn=V_norm(np.copy(V))
 Mc=m_cov(Vn)
-m=np.cov(np.transpose(Vn))
-print np.allclose(Mc,m)
+
+val,vec=np.linalg.eig(Mc)
+valp=np.flip(np.sort(val))
+p_importantes=[]
+for i in range(vec.shape[1]):
+    for j in range(vec.shape[1]):
+        if valp[i]==val[j]:
+            a=vec[:,j].reshape(vec.shape[0],1)
+            print "-----------------------"
+            print "Valor propio: ", val[j]
+            print "Vector propio: "
+            print a
+            for k in range(a.size):
+                if i==0 and a[k]==np.amax(a):
+                    PC1=a
+                    p1=nombre_v[k]
+                elif i==1 and a[k]==np.amax(a):
+                    PC2=a
+                    p2=nombre_v[k]
+PC=np.hstack((PC1,PC2))
+print 'Los parametros mas importantes son ', p1, ' para PC1 y ', p2, ' para PC2.'
