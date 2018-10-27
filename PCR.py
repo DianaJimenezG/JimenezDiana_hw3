@@ -61,12 +61,13 @@ for i in range(vec.shape[1]):
             print "Valor propio: ", val[j]
             print "Vector propio: "
             print a
-            for k in range(a.size):
-                if i==0 and a[k]==np.amax(a):
-                    PC1=a
-                    p1=nombre_v[k]
-                elif i==1 and a[k]==np.amax(a):
-                    PC2=a
-                    p2=nombre_v[k]
+            if i==0:
+                PC1=a
+                x=np.argsort(a,axis=0)
+                p1=np.array([nombre_v[x[-1, 0]], nombre_v[x[-2, 0]], nombre_v[x[-3, 0]]])
+            elif i==1:
+                PC2=a
+                x=np.argsort(a,axis=0)
+                p2=np.array([nombre_v[x[-1, 0]], nombre_v[x[-2, 0]], nombre_v[x[-3, 0]]])
 PC=np.hstack((PC1,PC2))
 print 'Los parametros mas importantes son ', p1, ' para PC1 y ', p2, ' para PC2.'
