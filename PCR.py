@@ -46,6 +46,14 @@ def m_cov(Mn):
             C[i,j]=cov_ij(Mn[:,i],Mn[:,j])
     return C
 
+def diagnostico(n, pr):
+    x=np.empty(0)
+    y=np.empty(0)
+    for i in n:
+        x=np.append(x, pr[i, 1])
+        y=np.append(y, pr[i, 0])
+    return x,y
+
 ######### Calculos ##########
 Vn=V_norm(np.copy(V))
 Mc=m_cov(Vn)
@@ -69,5 +77,22 @@ for i in range(vec.shape[1]):
                 PC2=a
                 x=np.argsort(a,axis=0)
                 p2=np.array([nombre_v[x[-1, 0]], nombre_v[x[-2, 0]], nombre_v[x[-3, 0]]])
-PC=np.hstack((PC1,PC2))
 print 'Los parametros mas importantes son ', p1, ' para PC1 y ', p2, ' para PC2.'
+
+PC=np.hstack((PC1,PC2))
+proy=np.dot(Vn,PC)
+
+Dn=np.argsort(D,axis=0)
+for i in range(Dn.size):
+    if Dn[i]!=Dn[i-1]:
+        n0=Dn[:i]
+        n1=Dn[i:]
+        break
+
+g=plt.figure(1)
+x1,y1=diagnostico(n0, proy)
+x2,y2=diagnostico(n1, proy)
+plt.scatter(x1, y1, color='green', label='Benigno')
+plt.scatter(x2, y2, color='red', label='Maligno')
+plt.legend()
+plt.show()
