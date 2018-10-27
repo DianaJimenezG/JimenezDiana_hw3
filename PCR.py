@@ -14,7 +14,8 @@ for i in range(diagn.shape[0]):
     if diagn[i]=='B':
         D[i]=0
 
-nombre_v=['mean radius','radius SE','worst radius', 'mean texture','texture SE','worst texture', 'mean perimeter','perimeter SE','worst perimeter', 'mean area','area SE','worst area', 'mean smoothness','smoothness SE','worst smoothness', 'mean compactness','compactness SE','worst compactness', 'mean concavity','concavity SE','worst concavity', 'mean concave points','concave points SE','worst concave points', 'mean symmetry','symmetry SE','worst symmetry', 'mean fractal dimension','fractal dimension SE','worst fractal dimension']
+#lista de los nombres de las variables.
+nombre_v=(['mean radius','radius SE','worst radius', 'mean texture','texture SE','worst texture', 'mean perimeter','perimeter SE','worst perimeter', 'mean area','area SE','worst area', 'mean smoothness','smoothness SE','worst smoothness', 'mean compactness','compactness SE','worst compactness', 'mean concavity','concavity SE','worst concavity', 'mean concave points','concave points SE','worst concave points', 'mean symmetry','symmetry SE','worst symmetry', 'mean fractal dimension','fractal dimension SE','worst fractal dimension'])
 
 
 ######### Funciones ##########
@@ -46,6 +47,8 @@ def m_cov(Mn):
             C[i,j]=cov_ij(Mn[:,i],Mn[:,j])
     return C
 
+#Funcion que categoriza los resultados de acuerdo a su diagnostico.
+#Con un arreglo de posiciones n crea los arreglos x y y.
 def diagnostico(n, pr):
     x=np.empty(0)
     y=np.empty(0)
@@ -54,10 +57,15 @@ def diagnostico(n, pr):
         y=np.append(y, pr[i, 1])
     return x,y
 
+
 ######### Calculos ##########
+#Genera el vector de valores normalizados y la matriz de covarianza.
 Vn=V_norm(np.copy(V))
 Mc=m_cov(Vn)
 
+#Recorre los arreglos de valores propios y de vectores propios.
+#Imprime cada valor con su respectivo vector propio.
+#Para los dos valores propios mas grandes (PC1 y PC2), se encuentran los parametros mas importantes y se impriment.
 val,vec=np.linalg.eig(Mc)
 valp=np.flip(np.sort(val))
 p_importantes=[]
@@ -65,10 +73,10 @@ for i in range(vec.shape[1]):
     for j in range(vec.shape[1]):
         if valp[i]==val[j]:
             a=vec[:,j].reshape(vec.shape[0],1)
-            #print "-----------------------"
-            #print "Valor propio: ", val[j]
-            #print "Vector propio: "
-            #print a
+            print "-----------------------"
+            print "Valor propio: ", val[j]
+            print "Vector propio: "
+            print a
             if i==0:
                 PC1=a
                 x=np.argsort(a,axis=0)
@@ -79,9 +87,11 @@ for i in range(vec.shape[1]):
                 p2=np.array([nombre_v[x[-1, 0]], nombre_v[x[-2, 0]], nombre_v[x[-3, 0]]])
 print 'Los parametros mas importantes son ', p1, ' para PC1 y ', p2, ' para PC2.'
 
+#Genera la matriz con los vectores propios PC1 y PC2.
 PC=np.hstack((PC1,PC2))
+#Proyecta los datos (Vn) del sistema de coordenadas (PC).
 proy=np.dot(Vn,PC)
-
+#Encuentra las posiciones para los casos venignos (n0) y malognos (n1).
 Dn=np.argsort(D)
 for i in range(Dn.size):
     if D[Dn[i]]==1.0:
@@ -89,10 +99,15 @@ for i in range(Dn.size):
         n1=Dn[i:]
         break
 
+
+######### Graficas ##########
 g=plt.figure(1)
 x1,y1=diagnostico(n0, proy)
 x2,y2=diagnostico(n1, proy)
 plt.scatter(x1, y1, color='green', label='Benigno', alpha=0.4)
 plt.scatter(x2, y2, color='red', label='Maligno', alpha=0.4)
 plt.legend()
-plt.show()
+plt.title('Distribucion del diagnostico')
+plt.xlabel('PC1')
+plt.ylabel('PC2')
+g.savefig('JimenezDiana_PCA.pdf')
