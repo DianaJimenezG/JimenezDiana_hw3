@@ -50,8 +50,8 @@ def diagnostico(n, pr):
     x=np.empty(0)
     y=np.empty(0)
     for i in n:
-        x=np.append(x, pr[i, 1])
-        y=np.append(y, pr[i, 0])
+        x=np.append(x, pr[i, 0])
+        y=np.append(y, pr[i, 1])
     return x,y
 
 ######### Calculos ##########
@@ -65,10 +65,10 @@ for i in range(vec.shape[1]):
     for j in range(vec.shape[1]):
         if valp[i]==val[j]:
             a=vec[:,j].reshape(vec.shape[0],1)
-            print "-----------------------"
-            print "Valor propio: ", val[j]
-            print "Vector propio: "
-            print a
+            #print "-----------------------"
+            #print "Valor propio: ", val[j]
+            #print "Vector propio: "
+            #print a
             if i==0:
                 PC1=a
                 x=np.argsort(a,axis=0)
@@ -82,9 +82,9 @@ print 'Los parametros mas importantes son ', p1, ' para PC1 y ', p2, ' para PC2.
 PC=np.hstack((PC1,PC2))
 proy=np.dot(Vn,PC)
 
-Dn=np.argsort(D,axis=0)
+Dn=np.argsort(D)
 for i in range(Dn.size):
-    if Dn[i]!=Dn[i-1]:
+    if D[Dn[i]]==1.0:
         n0=Dn[:i]
         n1=Dn[i:]
         break
@@ -92,7 +92,7 @@ for i in range(Dn.size):
 g=plt.figure(1)
 x1,y1=diagnostico(n0, proy)
 x2,y2=diagnostico(n1, proy)
-plt.scatter(x1, y1, color='green', label='Benigno')
-plt.scatter(x2, y2, color='red', label='Maligno')
+plt.scatter(x1, y1, color='green', label='Benigno', alpha=0.4)
+plt.scatter(x2, y2, color='red', label='Maligno', alpha=0.4)
 plt.legend()
 plt.show()
