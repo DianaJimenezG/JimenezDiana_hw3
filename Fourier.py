@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy import interpolate
+from scipy import fftpack, interpolate
 
 ########## Datos ##########
 datos=np.genfromtxt("signal.dat", delimiter=",")
@@ -34,6 +34,12 @@ def interp(x, y, xi):
     y_cub=cub(xi)
     return y_cuad, y_cub
 
+def filtro(fq, y, fc):
+    for i in range(fq.size):
+        if abs(fq[i])>=fc:
+            y[i]=0.0
+    return y
+
 
 ########## Calculos ##########
 N=y.shape[0]
@@ -50,6 +56,14 @@ freq_interp=frecuencias(Ni, ti[1]-ti[0])
 fou_cuad=transf_fourier(y_cuad, Ni)
 fou_cub=transf_fourier(y_cub, Ni)
 
+y_filt=fftpack.ifft(filtro(freq, np.copy(fou), 1000)).real
+y_cuad_filt=fftpack.ifft(filtro(freq, np.copy(fou_cuad), 1000)).real
+y_cub_filt=fftpack.ifft(filtro(freq, np.copy(fou_cub), 1000)).real
+
+y_filt5=fftpack.ifft(filtro(freq, np.copy(fou), 500)).real
+y_cuad_filt5=fftpack.ifft(filtro(freq, np.copy(fou_cuad), 500)).real
+y_cub_filt5=fftpack.ifft(filtro(freq, np.copy(fou_cub), 500)).real
+
 
 ########## Graficas ##########
 g=plt.figure(1)
@@ -61,9 +75,52 @@ plt.show()
 g.savefig('JimenezDiana_signal.pdf')
 
 h=plt.figure(2)
-plt.plot(freq, np.abs(np.real(fou)))
+plt.plot(freq, np.real(fou))
 plt.title('Transformada de Fourier')
 plt.ylabel('Amplitud')
 plt.xlabel('Frecuencia')
+plt.xlim(-2000,2000)
 plt.show()
 h.savefig('JimenezDiana_TF.pdf')
+
+o=plt.figure(3)
+plt.plot(t,y_filt)
+plt.title('Senal filtrada')
+plt.xlabel('Tiempo')
+plt.ylabel('y')
+plt.show()
+o.savefig('JimenezDiana_fitrada.pdf')
+
+z=plt.figure(4)
+plt.subplot(311)
+plt.plot(freq, np.real(fou))
+plt.xlim(-2000,2000)
+plt.title('Transformada de Fourier')
+plt.ylabel('Signal')
+plt.subplot(312)
+plt.plot(freq_interp, np.real(fou_cuad))
+plt.xlim(-2000,2000)
+plt.ylabel('Cuadratica')
+plt.subplot(313)
+plt.plot(freq_interp, np.real(fou_cub))
+plt.xlim(-2000,2000)
+plt.ylabel('Cubica')
+plt.xlabel('Frecuencias')
+plt.show()
+z.savefig('JimenezDiana_TF_interpola.pdf')
+
+u=plt.figure(5)
+plt.subplot(211)
+plt.plot(t, y_filt, label='Signal')
+plt.plot(t, y_cuad_filt, label='Cuadratica')
+plt.plot(t, y_cub_filt, label='Cubica')
+plt.legend()
+plt.title('1000Hz')
+plt.subplot(212)
+plt.plot(t, y_filt5, label='Signal')
+plt.plot(t, y_cuad_filt5, label='Cuadratica')
+plt.plot(t, y_cub_filt5, label='Cubica')
+plt.legend()
+plt.title('500Hz')
+plt.show()
+u.savefig('JimenezDiana_2Filtros.pdf')
