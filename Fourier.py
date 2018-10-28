@@ -8,8 +8,8 @@ t=datos[:,0]
 y=datos[:,1]
 
 d_incompletos=np.genfromtxt("incompletos.dat", delimiter=",")
-t_inc=datos[:,0]
-y_inc=datos[:,1]
+t_inc=d_incompletos[:,0]
+y_inc=d_incompletos[:,1]
 
 ########## Funciones ##########
 def transf_fourier(y, N):
@@ -48,7 +48,7 @@ freq=frecuencias(N, t[1]-t[0])
 print "BONO: no se usa el paquete fftfreq para calcular las frecuencias."
 
 #Implementacion de la funcion interp para calcular la interpolacion lineal, cuadratica y cubica.
-ti=np.linspace(t_inc[1], t_inc[-1], 512)
+ti=np.linspace(t_inc[0], t_inc[-1], 512)
 y_cuad=interp(t_inc, y_inc, ti)[0]
 y_cub=interp(t_inc, y_inc, ti)[1]
 Ni=ti.size
@@ -69,7 +69,7 @@ y_cub_filt5=fftpack.ifft(filtro(freq, np.copy(fou_cub), 500)).real
 g=plt.figure(1)
 plt.plot(t,y)
 plt.title('Senal original')
-plt.ylabel('y')
+plt.ylabel('Amplitud')
 plt.xlabel('Tiempo')
 plt.show()
 g.savefig('JimenezDiana_signal.pdf')
@@ -77,7 +77,7 @@ g.savefig('JimenezDiana_signal.pdf')
 h=plt.figure(2)
 plt.plot(freq, np.real(fou))
 plt.title('Transformada de Fourier')
-plt.ylabel('Amplitud')
+plt.ylabel('Transformada')
 plt.xlabel('Frecuencia')
 plt.xlim(-2000,2000)
 plt.show()
@@ -87,7 +87,7 @@ o=plt.figure(3)
 plt.plot(t,y_filt)
 plt.title('Senal filtrada')
 plt.xlabel('Tiempo')
-plt.ylabel('y')
+plt.ylabel('Amplitud')
 plt.show()
 o.savefig('JimenezDiana_fitrada.pdf')
 
@@ -112,15 +112,19 @@ z.savefig('JimenezDiana_TF_interpola.pdf')
 u=plt.figure(5)
 plt.subplot(211)
 plt.plot(t, y_filt, label='Signal')
-plt.plot(t, y_cuad_filt, label='Cuadratica')
-plt.plot(t, y_cub_filt, label='Cubica')
+plt.plot(ti, y_cuad_filt, label='Cuadratica')
+plt.plot(ti, y_cub_filt, label='Cubica')
 plt.legend()
-plt.title('1000Hz')
+plt.title('Filtro de 1000Hz')
+plt.ylabel('Amplitud')
+plt.tick_params(labelbottom=False)
 plt.subplot(212)
 plt.plot(t, y_filt5, label='Signal')
-plt.plot(t, y_cuad_filt5, label='Cuadratica')
-plt.plot(t, y_cub_filt5, label='Cubica')
+plt.plot(ti, y_cuad_filt5, label='Cuadratica')
+plt.plot(ti, y_cub_filt5, label='Cubica')
 plt.legend()
-plt.title('500Hz')
+plt.title('Filtro de 500Hz')
+plt.ylabel('Amplitud')
+plt.xlabel('Tiempo')
 plt.show()
 u.savefig('JimenezDiana_2Filtros.pdf')
