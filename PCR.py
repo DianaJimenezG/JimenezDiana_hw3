@@ -58,7 +58,7 @@ def diagnostico(n, pr):
     return x,y
 
 
-######### Calculos ##########
+######### Calculos y prints ##########
 #Genera el vector de valores normalizados y la matriz de covarianza.
 Vn=V_norm(np.copy(V))
 Mc=m_cov(Vn)
@@ -86,6 +86,8 @@ for i in range(vec.shape[1]):
                 x=np.argsort(a,axis=0)
                 p2=np.array([nombre_v[x[-1, 0]], nombre_v[x[-2, 0]], nombre_v[x[-3, 0]]])
 print 'Los parametros mas importantes son ', p1, ' para PC1 y ', p2, ' para PC2.'
+
+print "El metodo de PCA es util para hacer esta clasificacion ya que se ve una division clara entre benignos y malignos. Sin embargo, (como se muestra en la grafica) existe un margen de error importante, por lo que PCA no se puede utilizar como unico criterio de clasificacion."
 
 #Genera la matriz con los vectores propios PC1 y PC2.
 PC=np.hstack((PC1,PC2))

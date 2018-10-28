@@ -1,8 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy import fftpack
+import numpy.fft as fftpack
 from matplotlib.colors import LogNorm
-
 
 ########## Datos ##########
 #Almacena la imagen en un arreglo de numpy.
@@ -35,12 +34,16 @@ g=plt.figure(1)
 plt.imshow(np.abs(np.real(img_fft)), norm=LogNorm(vmin=5))
 plt.colorbar()
 plt.title('Transformada de Fourier')
+plt.xlabel('x')
+plt.ylabel('y')
 g.savefig('JimenezDiana_FT2D.pdf')
 
 h=plt.figure(2)
 plt.imshow(np.abs(np.real(img_filtro)), norm=LogNorm(vmin=5))
 plt.colorbar()
 plt.title('Transformada de Fourier con Filtro')
+plt.xlabel('x')
+plt.ylabel('y')
 h.savefig('JimenezDiana_FT2D_filtrada.pdf')
 
 k=plt.figure(3)

@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import fftpack, interpolate
 
+
 ########## Datos ##########
 datos=np.genfromtxt("signal.dat", delimiter=",")
 t=datos[:,0]
@@ -10,6 +11,7 @@ y=datos[:,1]
 d_incompletos=np.genfromtxt("incompletos.dat", delimiter=",")
 t_inc=d_incompletos[:,0]
 y_inc=d_incompletos[:,1]
+
 
 ########## Funciones ##########
 #Funcion que hace la trasformada de Fourier. Devuelve un arreglo complejo.
