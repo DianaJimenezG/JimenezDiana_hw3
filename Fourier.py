@@ -82,8 +82,8 @@ for i in range(fou.size):
 print "No se puede hacer la transformada de Fourier de los datos de incompletos.dat ya que no existe suficiente informacion para determinar las frecuencias principales. Por lo tanto, la trasnformada de estos datos resulta picos diferentes a los deseados."
 
 print "Las diferencias encontradas entre la transformada de Fourier de la senal original y las de las interpolacione son:"
-print "- Los picos extremos son significativamente mas bajos en las interpolaciones."
-print "- El ruido es mas grande para las frecuencias absolutas mayores a 500Hz en las interpolaciones."
+print "- Los picos extremos son significativamente mas bajos en las interpolacion cubica respecto a los picos centrales."
+print "- El ruido es mas grande para las frecuencias absolutas mayores a 500Hz en las interpolaciones, principalmente en la cuadratica."
 
 
 ########## Graficas ##########
@@ -99,7 +99,7 @@ plt.plot(freq, np.real(fou))
 plt.title('Transformada de Fourier de la senal')
 plt.ylabel('Transformada')
 plt.xlabel('Frecuencia [Hz]')
-plt.xlim(-2000,2000)
+plt.xlim(-1000,1000)
 h.savefig('JimenezDiana_TF.pdf')
 
 o=plt.figure(3)
@@ -112,16 +112,18 @@ o.savefig('JimenezDiana_fitrada.pdf')
 z=plt.figure(4)
 plt.subplot(311)
 plt.plot(freq, np.real(fou))
-plt.xlim(-2000,2000)
+plt.xlim(-1000,1000)
 plt.title('Transformada de Fourier')
 plt.ylabel('Signal')
+plt.tick_params(labelbottom=False)
 plt.subplot(312)
 plt.plot(freq_interp, np.real(fou_cuad))
-plt.xlim(-2000,2000)
+plt.xlim(-1000,1000)
 plt.ylabel('Cuadratica')
+plt.tick_params(labelbottom=False)
 plt.subplot(313)
 plt.plot(freq_interp, np.real(fou_cub))
-plt.xlim(-2000,2000)
+plt.xlim(-1000,1000)
 plt.ylabel('Cubica')
 plt.xlabel('Frecuencias [Hz]')
 z.savefig('JimenezDiana_TF_interpola.pdf')

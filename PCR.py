@@ -67,7 +67,7 @@ Mc=m_cov(Vn)
 #Imprime cada valor con su respectivo vector propio.
 #Para los dos valores propios mas grandes (PC1 y PC2), se encuentran los parametros mas importantes y se impriment.
 val,vec=np.linalg.eig(Mc)
-valp=np.flip(np.sort(val))
+valp=np.sort(val)[::-1]
 p_importantes=[]
 for i in range(vec.shape[1]):
     for j in range(vec.shape[1]):
