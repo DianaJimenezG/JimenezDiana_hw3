@@ -77,9 +77,9 @@ print "BONO: no se usa el paquete fftfreq para calcular las frecuencias."
 print "Las frecuencias principales son:"
 for i in range(fou.size):
     if abs(fou[i])>=150.0 and freq[i]>=0.0:
-        print (int)(freq[i]), " Hz"
+        print round(freq[i],4), " Hz"
 
-print "No se puede hacer la transformada de Fourier de los datos de incompletos.dat ya que no existe suficiente informacion para determinar las frecuencias principales. Por lo tanto, la trasnformada de estos datos resulta picos diferentes a los deseados."
+print "No se puede hacer la transformada de Fourier de los datos de incompletos.dat ya que no existe suficiente informacion para determinar las frecuencias principales. Por lo tanto, la transformada de estos datos resulta en picos diferentes a los deseados."
 
 print "Las diferencias encontradas entre la transformada de Fourier de la senal original y las de las interpolacione son:"
 print "- Los picos extremos son significativamente mas bajos en las interpolacion cubica respecto a los picos centrales."
